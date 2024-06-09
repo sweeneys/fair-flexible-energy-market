@@ -553,15 +553,27 @@ def allocateProbabilitySuccessRequest(requestList, neighboursList):
         neighbour_position = neighbour_parameters_only.index(neighbour)
 
         if(len(neighbour.fairness_time_series)>0):
-            total_request_fairness+= neighbour.fairness_time_series[-1]
+            # total_request_fairness+= neighbour.fairness_time_series[-1]
+            if(neighbour.fairness_time_series[-1]==0):
+                total_request_fairness+=999 #division by zero
+            else:
+                total_request_fairness+= (1/neighbour.fairness_time_series[-1])
         else:
             total_request_fairness +=1 #if no requests have been submitted yet, use 100% as initial conditon
 
     #normalise probability scores based on all requests in queue in line with stochastic resource allocation methodology
     temp_increase_success_factor = 1
     for request in requestList:
+        neighbour_id = request.neighbour_id
+        neighbour_parameters_only = extract(neighboursList)
+        neighbour = next((x for x in neighbour_parameters_only if x.id == neighbour_id), None)
+        neighbour_position = neighbour_parameters_only.index(neighbour)
+
         if(len(neighbour.fairness_time_series)>0):
-            request.temp_prob_success = temp_increase_success_factor*neighbour.fairness_time_series[-1]/total_request_fairness
+            if(neighbour.fairness_time_series[-1]==0):
+                request.temp_prob_success = (temp_increase_success_factor*999)/total_request_fairness #division by zero
+            else:
+                request.temp_prob_success = temp_increase_success_factor*(1/neighbour.fairness_time_series[-1])/total_request_fairness
         else:
             request.temp_prob_success = temp_increase_success_factor/total_request_fairness
 
@@ -587,7 +599,9 @@ def identifyRandomRequestFromQueue(requestList):
 
 #biased coin toss methodology
 def flipBiasedCoin(biased_prob_success):
-    return True if random.random() > biased_prob_success else False
+    rand = random.random()
+    return True if rand < biased_prob_success else False
+
 
  
 
