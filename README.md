@@ -1,6 +1,6 @@
 # REPO DESCRIPTION / OBJECTIVE 
 
-- This repo is for allocating energy according to the methodology described in [link to paper].
+- This repo is for allocating energy according to the methodology described in https://arxiv.org/pdf/2407.20814v1.
 
 - It is required to provide input datasets for supply and consumption. Consumption should be split into essential consumption and flexible consumption which can be done using repo https://github.com/sweeneys/consumption-characteriser.
 
